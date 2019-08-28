@@ -7,6 +7,7 @@ import { useFetch } from './hook/useFetch'
 import { Hello } from './Hello';
 import { AddTodo } from './hook/AddTodo';
 import { Word } from './hook/Word';
+import { IntroName } from './useState/IntroName';
 
 
 function App() {
@@ -62,7 +63,7 @@ function App() {
         <AddTodo/>
         <h6>useMemo</h6>
         <Word />
-
+        <IntroName />
 
       </>
     </div>
