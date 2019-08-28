@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
+/*
+  show name of user from localStorage if exits
+  and update name from input form
+*/
 export function SaveName() {
   const [name, setName] = useState(() => (localStorage.getItem("name")));
+
   useEffect(() => {
     localStorage.setItem("name", name);
   },[name])
