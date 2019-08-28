@@ -5,10 +5,14 @@ export function IntroName() {
 
   return (
     <>
-      <h1>chào bạn, {name}</h1>
+      <p>chào bạn, {name}</p>
 
       <form onSubmit={e=> e.preventDefault()}>
-        <input value={name} onChange={e=> setName(e.target.value)} />
+        <input
+          placeholder="please enter your name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
       </form>
     </>
   );

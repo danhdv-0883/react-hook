@@ -5,9 +5,11 @@ import { Test } from "./Test";
 import { useForm } from './hook/useForm';
 import { useFetch } from './hook/useFetch'
 import { Hello } from './Hello';
-import { AddTodo } from './hook/AddTodo';
-import { Word } from './hook/Word';
+import { AddTodo } from './useReducer/AddTodo';
+import { Word } from './useMemo/Word';
 import { IntroName } from './useState/IntroName';
+import { SaveName } from './useEffect/SaveName';
+import { FormUseCustomHook } from './customhooks/FormUseCustomHook';
 
 
 function App() {
@@ -59,11 +61,16 @@ function App() {
         <button onClick={() => setShowHello(!showHello)}>toggle</button>
         {showHello && <Hello />}
 
-        <h6>useReducer</h6>
+        <h3> - useReducer: </h3>
         <AddTodo/>
-        <h6>useMemo</h6>
+        <h3> - useMemo: </h3>
         <Word />
+        <h3> - useState: </h3>
         <IntroName />
+        <h3> - useEffect: </h3>
+        <SaveName />
+        <h3> - custom hooks: </h3>
+        <FormUseCustomHook />
 
       </>
     </div>
