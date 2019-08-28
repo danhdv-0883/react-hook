@@ -385,3 +385,4 @@ http://vuilaptrinh.com/2019-07-03-huong-dan-su-dung-react-hook-effect/#Effect-kh
 https://www.it-swarm.net/vi/javascript/phat-hien-nhap-ben-ngoai-thanh-phan-react/1055680998/
 https://www.it-swarm.net/vi/javascript/phan-ung-ma-sau-khi-ket-xuat/1049225752/
 https://www.youtube.com/playlist?list=PLN3n1USn4xlmyw3ebYuZmGp60mcENitdM
+ví dụ useMemo và useCallBack: https://scrimba.com/p/pRB9Hw/cyGEEcn
