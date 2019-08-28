@@ -5,6 +5,7 @@ import { Test } from "./Test";
 import { useForm } from './hook/useForm';
 import { useFetch } from './hook/useFetch'
 import { Hello } from './Hello';
+import { AddTodo } from './hook/AddTodo';
 
 
 function App() {
@@ -55,6 +56,11 @@ function App() {
         {/* <Hello /> */}
         <button onClick={() => setShowHello(!showHello)}>toggle</button>
         {showHello && <Hello />}
+
+        <h6>useReducer</h6>
+        <AddTodo/>
+
+
       </>
     </div>
   );
