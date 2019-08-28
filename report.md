@@ -92,61 +92,7 @@ _**Chú ý:**_
 
 - function của nó là useState mà không phải createState, vì state lun cập nhật lên tục, dùng từ create chỉ ý nghĩa tạo trong lần đầu tiên rùi thui
 
-## 3> Custom your hook: với useState:
-Ta viết 1 component form:
-``` javascript
-import { useState } from "react";
-
-export const useForm = initialValues => {
-  const [values, setValues] = useState(initialValues);
-
-  return [
-    values,
-    e => {
-      setValues({
-        ...values,
-        [e.target.name]: e.target.value
-      });
-    }
-  ];
-}
-```
-=> Sau đó sử dụng:
-``` javascript 
-import React from "react";
-import { useForm } from "./useForm";
-
-const App = () => {
-  const [values, handleChange] = useForm({ email: "", password: "" });
-
-  return (
-    <div>
-      <>
-        <input name="email" value={values.email} onChange={handleChange} />
-        <input
-          type="password"
-          name="password"
-          value={values.password}
-          onChange={handleChange}
-        />
-      </>
-    </div>
-  );
-};
-```
-
-
-- Custom Hooks nó là convention theo như  design of Hooks, chứ không phải là một tính năng
-
-- Việc custom : tên của component đó phải bắt đầu bằng từ khóa use, nó giúp việc kiểm tra tự động vi phạm theo như rule của hooks
-
-- Các state của các component này là độc lập với nhau
-
-
-
-Nguồn xem thêm: https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook
-
-## 4> Chú ý: 
+## 3> Chú ý: 
 - Điểm khác biệt so với setState là nó không thể tự động auto merged cập nhật object.
 
 Có thẻ dùng:
@@ -309,10 +255,13 @@ useEffect(updateTitle)     // 4. Replace the effect for updating the title
 - [Cleaning up an effect](https://reactjs.org/docs/hooks-reference.html#cleaning-up-an-effect) :
 
 useEffect(() => {
-    return () => {
-      //firstly 
-    };
-  });
+  // almost same as componentDidMount
+  console.log('mounted!');
+  return () => {
+    // almost same as componentWillUnmount
+    console.log('unmount!');
+  };
+}, []);
 
 ## 4> Tóm lại:
 - constructor: không cần thiết. Nếu cần thiết khai báo state, có thể dùng useState, còn nếu muốn tính toán và set cho state, ta có thể sử dụng function trong useState
@@ -343,3 +292,96 @@ Các phần trước đó ta đã trình bày sơ qua, nhưng phần này trình
 
 ## 2> Chỉ nên gọi hook trong function component hay custom của hooks
 
+
+---
+# V> Các api khác:
+## 1> useMemo:
+giống componentShouldUpdate --> component child --> return memoized value
+## 2> useCallBack 
+giống useMemo, chỉ khác là nó được dùng để --> event,...--> return memoized callback.
+## 3> useRef:
+tạo ref cho 
+## 4> useReducer:
+giúp việc xử lý nested object và update object(useState không làm được) 
+
+## 5> useLayoutEffect:
+gần giống useEffect, khác it fires synchronously after all DOM mutation(được gọi đồng bộ sau khi DOM đã được update.)
+## 6> useContext:
+đơn giản hóa việc dùng context, thay vì lồng nhau-->multi context
+
+
+# VI> Custom your hook: 
+- Giúp xử lý các vấn đề trùng lặp về logic, ta sẽ tách thành 1 component riêng và tái sử dụng. Thay vì trước đây phải dùng HOCs, điều đó khiến ta phải chuyển những gì trùng lặp vào HOCs
+
+
+Ví dụ với useStae,Ta viết 1 component form:
+``` javascript
+import { useState } from "react";
+
+export const useForm = initialValues => {
+  const [values, setValues] = useState(initialValues);
+
+  return [
+    values,
+    e => {
+      setValues({
+        ...values,
+        [e.target.name]: e.target.value
+      });
+    }
+  ];
+}
+```
+=> Sau đó sử dụng:
+``` javascript 
+import React from "react";
+import { useForm } from "./useForm";
+
+const App = () => {
+  const [values, handleChange] = useForm({ email: "", password: "" });
+
+  return (
+    <div>
+      <>
+        <input name="email" value={values.email} onChange={handleChange} />
+        <input
+          type="password"
+          name="password"
+          value={values.password}
+          onChange={handleChange}
+        />
+      </>
+    </div>
+  );
+};
+```
+
+
+- Custom Hooks nó là convention theo như  design of Hooks, chứ không phải là một tính năng
+
+- Việc custom : tên của component đó phải bắt đầu bằng từ khóa use, nó giúp việc kiểm tra tự động vi phạm theo như rule của hooks
+
+- Các state của các component này là độc lập với nhau
+
+
+
+Nguồn xem thêm: https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook
+
+--- 
+
+
+
+# VII> Các custom hook hay dùng:
+https://usehooks.com/
+
+https://www.hooks.guide/
+
+
+https://viblo.asia/p/react-introducing-hooks-QpmleERNlrd
+https://viblo.asia/p/react-memo-va-usememo-aWj534z1K6m
+https://viblo.asia/p/cung-tim-hieu-ve-cac-hook-trong-react-hooks-Ljy5VYgjlra
+https://viblo.asia/p/gioi-thieu-ve-react-hooks-trong-react-167-alpha-WAyK8LaoKxX
+http://vuilaptrinh.com/2019-07-03-huong-dan-su-dung-react-hook-effect/#Effect-kh%C3%B4ng-c%E1%BA%A7n-Cleanup-effects-without-cleanup
+https://www.it-swarm.net/vi/javascript/phat-hien-nhap-ben-ngoai-thanh-phan-react/1055680998/
+https://www.it-swarm.net/vi/javascript/phan-ung-ma-sau-khi-ket-xuat/1049225752/
+https://www.youtube.com/playlist?list=PLN3n1USn4xlmyw3ebYuZmGp60mcENitdM
