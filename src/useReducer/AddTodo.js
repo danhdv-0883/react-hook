@@ -1,5 +1,9 @@
 import React, { useReducer, useState } from 'react';
 
+const initState = {
+  notes: []
+};
+
 function reducer(state, action) {
   switch (action.type) {
     case 'add':
@@ -8,19 +12,18 @@ function reducer(state, action) {
           ...state.notes, { text: action.text }
         ]
       }
-    case 'remove':
-      return '';
+    case 'removeAll':
+      return {
+        notes: [],
+      }
     default:
-      return [];
+      throw new Error();
   }
 }
 
-
 export const AddTodo = () => {
   const [text, setText] = useState();
-  const [state, dispatch] = useReducer(reducer, {
-    notes: []
-  })
+  const [state, dispatch] = useReducer(reducer, initState)
 
   return(
     <div>

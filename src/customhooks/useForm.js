@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useDebugValue } from "react";
 
 export const useForm = initialValues => {
   const [values, setValues] = useState(initialValues);
-
+  useDebugValue(`đây là custom hook`)
   return [
     values,
     e => {

@@ -13,6 +13,8 @@ import { FormUseCustomHook } from './customhooks/FormUseCustomHook';
 import { FormUseRef } from './useRef/FormUseRef';
 import { TestUseContext } from './useContext/TestUseContext';
 import { UserProvider } from './useContext/UserContext';
+import { Shape } from './useLayoutEffect/Shape';
+import { WordCallBack } from './useCallback/WordCallBack';
 
 
 function App() {
@@ -81,6 +83,11 @@ function App() {
         <UserProvider>
           <TestUseContext />
         </UserProvider>
+        <h3>useEffectlayout</h3>
+        <Shape />
+
+        <h3>useCallBack</h3>
+        <WordCallBack />
       </>
     </div>
   );

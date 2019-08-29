@@ -255,6 +255,7 @@ useEffect(updateTitle)     // 4. Replace the effect for updating the title
 - [Cleaning up an effect](https://reactjs.org/docs/hooks-reference.html#cleaning-up-an-effect) :
 Những effect mà có return nhằm để dọn dẹp những tác vụ không cần thiết khi unmount. Tham số thứ 2 của useEffect là [] : chạy 1 lần duy nhất
 
+``` javascript
 useEffect(() => {
   // almost same as componentDidMount
   console.log('mounted!');
@@ -263,6 +264,18 @@ useEffect(() => {
     console.log('unmount!');
   };
 }, []);
+
+_Ví dụ_:
+useEffect(() => {
+    const clicked = () => console.log('window clicked')
+    window.addEventListener('click', clicked)
+
+    // return a clean-up function
+    return () => {
+      window.removeEventListener('click', clicked)
+    }
+  }, [])
+```
 
 ## 4> Tóm lại:
 - constructor: không cần thiết. Nếu cần thiết khai báo state, có thể dùng useState, còn nếu muốn tính toán và set cho state, ta có thể sử dụng function trong useState
@@ -307,7 +320,7 @@ _Ví dụ:_ ta tạo ref cho input
 ``` javascript
 const inputNameRef = useRef();
 ```
-- Sau đó chỉ ref cho đối tượng cần gán và sử dụng như bình thường với class component
+- Sau đó chỉ ref cho đối tượng cần gán và sau đó sử dụng như bình thường như với ref ta từng dùng với class component
 ``` javascript
 form onSubmit={e => e.preventDefault()}>
   <input
@@ -325,14 +338,138 @@ form onSubmit={e => e.preventDefault()}>
 </form>
 ```
 ## 4> useReducer:
--  giúp việc xử lý nested object và update object(useState không làm được), đây như là một bảng nâng cấp của useStae hỗ trợ để xử lý state mạnh mẽ hơn
+- Đây như là một bảng nâng cấp của useStae hỗ trợ để xử lý state mạnh mẽ hơn.
+Giúp việc xử lý nested object và update object(useState không làm được),
+
+
+- **_Ví dụ_** : ta muốn thêm mới ghi chú, ta thực hiện chức năng thêm mới.
+
+Ban đầu: ta có initState có mảng notes không có note nào cả. Việc reducer cũng tương tự như cách viết thư viện reducer, nhận vào state và action để trả về state tương ứng
+``` javascript
+const initState = {
+  notes: []
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'add':
+      return {
+        notes: [
+          ...state.notes, { text: action.text }
+        ]
+      }
+    case 'removeAll':
+      return {
+        notes: [],
+      }
+    default:
+      throw new Error();
+  }
+}
+```
+
+- Cách dispatch một action:
+Ta khai báo useReducer: const [state, dispatch] = useReducer(reducer, initState). Nó nhận vào 2 tham số: reducer để xử lý, initState là state ban đầu. Tương ứng như các hook khác, ở đây trả về state, và dispatch 
+- Cách dispach cũng rất đơn giản, ta dispatch type và value
+
+
+``` javascript
+export const AddTodo = () => {
+  const [text, setText] = useState();
+  const [state, dispatch] = useReducer(reducer, initState)
+
+  return(
+    <div>
+      <ul>
+        {state.notes.map((note, index) => <li key={index}>{note.text}</li>)}
+      </ul>
+
+      <form onSubmit={e=> e.preventDefault()}>
+        <input type="text" onChange={(e)=> setText(e.target.value)}>
+        </input>
+        <button onClick={() => { dispatch({ type: 'add', text }) }}>ok</button>
+      </form>
+    </div>
+  );
+
+}
+```
+
+
 
 
 ## 5> useLayoutEffect:
-gần giống useEffect, khác it fires synchronously after all DOM mutation(được gọi đồng bộ sau khi DOM đã được update.)
-## 6> useContext:
-đơn giản hóa việc dùng context, thay vì lồng nhau-->multi context
+- gần giống useEffect, khác it fires synchronously after all DOM mutation(được gọi đồng bộ sau khi DOM đã được update.)
+Nên nó được dùng để đọc tính toán layout, style sau khi dom đã thay đổi, nhưng trước khi phase painted vẽ layout mới
 
+- chú ý: không sử dụng nó nếu ta server render, chỉ dùng với trường hợp client render
+
+## 6> useContext:
+- Đơn giản hóa việc dùng context hơn so với trước đây
+- Cú pháp dùng:
+```javascript
+ const value = useContext(MyContext);
+ ```
+Trong cú pháp này: useContext sử dụng context object được tạo ra từ React.createContext và sẽ trả về giá trị của context đó. Và giá trị context đó được lấy từ <MyContext.Provider> gần nhất.
+
+- Ví dụ: ta tạo ra context và provider
+``` javascript
+const UserContext = createContext();
+
+const UserProvider = (props) => {
+  const [state, setState] = useState({
+    backgroundColor: "blue"
+  });
+
+  return (
+    <UserContext.Provider value={[state, setState]}>
+      {props.children}
+    </UserContext.Provider>
+  );
+}
+
+export {
+  UserContext,
+  UserProvider,
+}
+```
+
+Tương ứng:
+
+``` javascript
+<UserProvider>
+  <TestUseContext />
+</UserProvider>
+````
+Ta sử dụng context:
+
+``` javascript
+  export function TestUseContext() {
+    const [state,setState] = useContext(UserContext);
+
+    return (
+      <>
+        <p style={{ background: state.backgroundColor}}>xin chào</p>
+        <input type="color" onClick={(e) => setState({backgroundColor,e.target.value)}/>
+      </>
+    )
+```
+
+
+
+
+
+## 7> useImperativeHandle:
+
+## 8> useDebugValue:
+- Được sử dụng với DevTools, để hiển thị các nhãn với các custom hooks
+
+- Cách dùng rất đơn giản:
+```javascript
+useDebugValue(label)
+``` 
+
+- Chú ý: Không được khuyến khích dùng, chỉ dùng 1 phần cho các shared library
 
 # VI> Custom your hook: 
 - Giúp xử lý các vấn đề trùng lặp về logic, ta sẽ tách thành 1 component riêng và tái sử dụng. Thay vì trước đây phải dùng HOCs, điều đó khiến ta phải chuyển những gì trùng lặp vào HOCs

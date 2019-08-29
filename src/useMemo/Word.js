@@ -1,4 +1,4 @@
-import React,{ useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 function upper(text) {
   console.log("uppercase");
@@ -12,13 +12,15 @@ const UpperCase = ({ text }) => {
   return upperCaseText;
 }
 
-export function Word () {
-  const [name, setName] = useState("demo");
+export function Word() {
+  const [name, setName] = useState("tên ai đó");
+  const [text, setText] = useState("text demo");
 
-  return(
+  return (
     <form onSubmit={e => e.preventDefault()}>
-      <UpperCase text="text demo"/>
-      <input value={name} onChange={e => setName(e.target.value)}/>
+      <UpperCase text={text} />
+      <input value={name} onChange={e => setName(e.target.value)} />
+      <input value={text} onChange={e => setText(e.target.value)} />
     </form>
   )
 }
