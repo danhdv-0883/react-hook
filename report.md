@@ -310,7 +310,10 @@ Các phần trước đó ta đã trình bày sơ qua, nhưng phần này trình
 ---
 # V> Các api khác:
 ## 1> useMemo:
-giống componentShouldUpdate --> component child --> return memoized value
+- Mục đích: tránh lặp lại việc render các component con nếu mà không có sự thay đổi liên quan đến nó
+Nó tránh việc phải tính toán lại mỗi khi render lại
+- Nó trả về 1 memoized value
+
 ## 2> useCallBack 
 giống useMemo, chỉ khác là nó được dùng để --> event,...--> return memoized callback.
 ## 3> useRef:
@@ -397,9 +400,6 @@ export const AddTodo = () => {
 
 }
 ```
-
-
-
 
 ## 5> useLayoutEffect:
 - gần giống useEffect, khác it fires synchronously after all DOM mutation(được gọi đồng bộ sau khi DOM đã được update.)

@@ -7,7 +7,7 @@ export function TestUseContext() {
   return (
     <>
       <p style={{ background: state.backgroundColor}}>xin chào</p>
-      <input type="color" onClick={(e) => setState({backgroundColor,e.target.value)}/>
+      <input type="color" onChange={(e) => setState({ backgroundColor: e.target.value })} />
     </>
   )
 }
