@@ -4,12 +4,10 @@ import { UserContext } from './UserContext';
 export function TestUseContext() {
   const [state,setState] = useContext(UserContext);
 
-  console.log(state)
-
   return (
     <>
       <p style={{ background: state.backgroundColor}}>xin chào</p>
-      <input type="color" onChange={(e) => setState({backgroundColor: e.target.value})}/>
+      <input type="color" onClick={(e) => setState({backgroundColor,e.target.value)}/>
     </>
   )
 }

@@ -253,7 +253,7 @@ useEffect(updateTitle)     // 4. Replace the effect for updating the title
 ```
 
 - [Cleaning up an effect](https://reactjs.org/docs/hooks-reference.html#cleaning-up-an-effect) :
-Những effect mà có return nhằm để dọn dẹp những tác vụ không cần thiết khi unmount. Tham số thứ 2 của useEffect là [] : chạy 1 lần duy nhất
+Những effect mà có return nhằm để dọn dẹp những tác vụ không cần thiết khi unmount hoặc dọn dẹp các event không dùng nữa. Tham số thứ 2 của useEffect là [] : chạy 1 lần duy nhất
 
 ``` javascript
 useEffect(() => {
@@ -368,9 +368,12 @@ function reducer(state, action) {
 }
 ```
 
-- Cách dispatch một action:
-Ta khai báo useReducer: const [state, dispatch] = useReducer(reducer, initState). Nó nhận vào 2 tham số: reducer để xử lý, initState là state ban đầu. Tương ứng như các hook khác, ở đây trả về state, và dispatch 
-- Cách dispach cũng rất đơn giản, ta dispatch type và value
+- Ta khai báo useReducer:
+``` javascript
+ const [state, dispatch] = useReducer(reducer, initState)
+```
+ Nó nhận vào 2 tham số: reducer để xử lý, initState là state ban đầu. Tương ứng như các hook khác, ở đây trả về state, và dispatch 
+- Cách dispach cũng rất đơn giản, ta dispatch type và value. Việc sử lý sẽ do reducer dựa vào type và value vừa mới dispatch này
 
 
 ``` javascript
@@ -460,6 +463,48 @@ Ta sử dụng context:
 
 
 ## 7> useImperativeHandle:
+- useImperativeHandle: Component child có thể tùy chỉnh các trả về ref cho Component cha.
+useImperativeHandle phải đi kèm với forwardRef
+
+- Việc sử dụng nó bản chất hỗ trợ thêm cho ref, cần tránh hạn chế dùng trong tất cả các trường hợp
+
+- Ví dụ:
+Đây là component con:
+``` javascript
+import React, { useRef, useImperativeHandle, forwardRef} from 'react';
+
+function ChildInput(props, ref) {
+  const inputRef = useRef();
+  useImperativeHandle(ref, () => inputRef.current);
+
+  return <input type="text" ref={inputRef} />;
+}
+
+export default forwardRef(ChildInput);
+```
+ở Component cha
+
+``` javascript
+import React, {useEffect, useRef} from "react";
+import ChildInput from "./ChildInput";
+
+export function ImperativeHandle () {
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  return (
+    <div>
+      <ChildInput ref={inputRef} />
+    </div>
+  );
+}
+```
+
+
+
 
 ## 8> useDebugValue:
 - Được sử dụng với DevTools, để hiển thị các nhãn với các custom hooks

@@ -15,6 +15,7 @@ import { TestUseContext } from './useContext/TestUseContext';
 import { UserProvider } from './useContext/UserContext';
 import { Shape } from './useLayoutEffect/Shape';
 import { WordCallBack } from './useCallback/WordCallBack';
+import { ImperativeHandle } from './useImperativeHandle/ImperativeHandle';
 
 
 function App() {
@@ -88,6 +89,10 @@ function App() {
 
         <h3>useCallBack</h3>
         <WordCallBack />
+
+        <h3>useImperativeHandle</h3>
+        <ImperativeHandle />
+
       </>
     </div>
   );
