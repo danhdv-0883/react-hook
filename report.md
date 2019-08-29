@@ -93,9 +93,9 @@ _**Chú ý:**_
 - function của nó là useState mà không phải createState, vì state lun cập nhật lên tục, dùng từ create chỉ ý nghĩa tạo trong lần đầu tiên rùi thui
 
 ## 3> Chú ý: 
-- Điểm khác biệt so với setState là nó không thể tự động auto merged cập nhật object.
+- Điểm khác biệt so với setState là nó không thể tự động auto merged cập nhật object/array.
 
-Có thẻ dùng:
+Có thẻ dùng spread operator để giải quyết:
 ``` javascript
 setState(prevState => {
   // Object.assign would also work
@@ -253,6 +253,7 @@ useEffect(updateTitle)     // 4. Replace the effect for updating the title
 ```
 
 - [Cleaning up an effect](https://reactjs.org/docs/hooks-reference.html#cleaning-up-an-effect) :
+Những effect mà có return nhằm để dọn dẹp những tác vụ không cần thiết khi unmount. Tham số thứ 2 của useEffect là [] : chạy 1 lần duy nhất
 
 useEffect(() => {
   // almost same as componentDidMount
@@ -300,9 +301,32 @@ giống componentShouldUpdate --> component child --> return memoized value
 ## 2> useCallBack 
 giống useMemo, chỉ khác là nó được dùng để --> event,...--> return memoized callback.
 ## 3> useRef:
-tạo ref cho 
+- Ta có thể tạo ref cho component thay vì dùng createRef():
+
+_Ví dụ:_ ta tạo ref cho input
+``` javascript
+const inputNameRef = useRef();
+```
+- Sau đó chỉ ref cho đối tượng cần gán và sử dụng như bình thường với class component
+``` javascript
+form onSubmit={e => e.preventDefault()}>
+  <input
+  ...
+    ref={inputNameRef}
+  />
+  <button onClick={
+    () => {
+      setName("");
+      inputNameRef.current.focus();
+    }
+  }>
+    ok
+  </button>
+</form>
+```
 ## 4> useReducer:
-giúp việc xử lý nested object và update object(useState không làm được) 
+-  giúp việc xử lý nested object và update object(useState không làm được), đây như là một bảng nâng cấp của useStae hỗ trợ để xử lý state mạnh mẽ hơn
+
 
 ## 5> useLayoutEffect:
 gần giống useEffect, khác it fires synchronously after all DOM mutation(được gọi đồng bộ sau khi DOM đã được update.)

@@ -11,6 +11,8 @@ import { IntroName } from './useState/IntroName';
 import { SaveName } from './useEffect/SaveName';
 import { FormUseCustomHook } from './customhooks/FormUseCustomHook';
 import { FormUseRef } from './useRef/FormUseRef';
+import { TestUseContext } from './useContext/TestUseContext';
+import { UserProvider } from './useContext/UserContext';
 
 
 function App() {
@@ -74,6 +76,11 @@ function App() {
         <FormUseCustomHook />
         <h3> - useRef: </h3>
         <FormUseRef />
+
+        <h3> - useContext </h3>
+        <UserProvider>
+          <TestUseContext />
+        </UserProvider>
       </>
     </div>
   );
