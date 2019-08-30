@@ -11,8 +11,18 @@ export function SaveName() {
     localStorage.setItem("name", name);
   },[name])
 
+  useEffect(() => {
+    // almost same as componentDidMount
+    console.log('mounted!');
+    return () => {
+      // almost same as componentWillUnmount
+      console.log('unmount!');
+    };
+  }, []);
   return (
     <>
+      <h3> - useEffect: </h3>
+
       <p>chào bạn, {name}</p>
 
       <form onSubmit={e => e.preventDefault()}>

@@ -17,11 +17,14 @@ export function Word() {
   const [text, setText] = useState("text demo");
 
   return (
-    <form onSubmit={e => e.preventDefault()}>
-      <UpperCase text={text} />
-      <input value={name} onChange={e => setName(e.target.value)} />
-      <input value={text} onChange={e => setText(e.target.value)} />
-    </form>
-  )
+    <div>
+      <h3> - useMemo: </h3>
+      <form onSubmit={e => e.preventDefault()}>
+        <UpperCase text={text} />
+        <input value={name} onChange={e => setName(e.target.value)} />
+        <input value={text} onChange={e => setText(e.target.value)} />
+      </form>
+    </div>
+  );
 }
 

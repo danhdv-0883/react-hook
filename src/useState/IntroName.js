@@ -5,6 +5,8 @@ export function IntroName() {
 
   return (
     <>
+      <h3> - useState: </h3>
+
       <p>chào bạn, {name}</p>
 
       <form onSubmit={e=> e.preventDefault()}>

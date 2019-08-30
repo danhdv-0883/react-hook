@@ -12,13 +12,14 @@ export const WordCallBack = () => {
     );
   }
 
-  const MemoizedComponent = useCallback(<ChildComponent text={text} />, [text]);
+  const MemoizedComponent = useCallback(() => <ChildComponent text={text} />, [text]);
 
   return (
     <div>
+      <h3>useCallBack</h3>
       <button onClick={() => setText('Hello!')}>Hello! </button>
       <button onClick={() => setText('Hola!')}>Hola!</button>
-      {MemoizedComponent}
+      {MemoizedComponent()}
     </div>
   )
 }

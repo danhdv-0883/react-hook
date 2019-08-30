@@ -310,12 +310,33 @@ Các phần trước đó ta đã trình bày sơ qua, nhưng phần này trình
 ---
 # V> Các api khác:
 ## 1> useMemo:
-- Mục đích: tránh lặp lại việc render các component con nếu mà không có sự thay đổi liên quan đến nó
-Nó tránh việc phải tính toán lại mỗi khi render lại
-- Nó trả về 1 memoized value
+Tương tự như các cách để tránh re-render lại khi không cần thiết(shouldComponentUpdate, memo, pureComponent), react hook có hỗ trợ useMemo để làm việc nà
+
+- Cú pháp
+``` javascript
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+```
+- Return về 1 memoized value giá trị cụ thể( khác với useCallBack return về 1 function) / function có return value
+-  Nếu ta không có array nào truyền vào, thì nó sẽ tự tính toán lại mỗi khi render
+
 
 ## 2> useCallBack 
-giống useMemo, chỉ khác là nó được dùng để --> event,...--> return memoized callback.
+``` javascript
+const memoizedCallback = useCallback(
+  () => {
+    doSomething(a, b);
+  },
+  [a, b],
+);
+
+```
+
+- Thay vì return 1 value như useMemo, useCallBack return 1 fucntion
+- Được dùng để chống sự re-render lại khi không cần thiêt của các thành phần con khi các sự phụ phụ thuộc có liên quan thay đổi (ví dự giống như `shouldComponentUpdate`)
+- useCallback(fn, deps) sẽ tương đương với useMemo(() => fn, deps).
+_**Ví dụ:**_
+
+
 ## 3> useRef:
 - Ta có thể tạo ref cho component thay vì dùng createRef():
 

@@ -10,6 +10,7 @@ export function ImperativeHandle () {
 
   return (
     <div>
+      <h3>useImperativeHandle</h3>
       <ChildInput ref={inputRef} />
     </div>
   );

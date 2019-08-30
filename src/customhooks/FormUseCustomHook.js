@@ -6,6 +6,8 @@ export function FormUseCustomHook() {
 
   return (
     <>
+      <h3> - custom hooks: </h3>
+
       <p>chào bạn, {inputs.name}</p>
 
       <form onSubmit={e => e.preventDefault()}>

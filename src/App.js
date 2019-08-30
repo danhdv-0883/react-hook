@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { Test } from "./Test";
 import { useForm } from './hook/useForm';
@@ -16,6 +15,8 @@ import { UserProvider } from './useContext/UserContext';
 import { Shape } from './useLayoutEffect/Shape';
 import { WordCallBack } from './useCallback/WordCallBack';
 import { ImperativeHandle } from './useImperativeHandle/ImperativeHandle';
+import { WorkCallBack2 } from './useCallback/WorkCallBack2';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 
 function App() {
@@ -25,6 +26,9 @@ function App() {
   const [fruit, setFruit] = useState("banana");
   const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
 
+  const [pe, setPe] = useState({name:"ai do", age: 18});
+  const [ar, setAr] = useState([1, 2, 3, 4, { name: "ai do", age: 18 }]);
+
   //
   const inputRef = useRef();
   const hello = useRef(() => console.log("hello"));
@@ -33,6 +37,15 @@ function App() {
   return (
     <div>
       <>
+        {/* object state */}
+        {/* <input onChange={e=>setPe(Object.assign(pe, {name: e.target.value}))} /> */}
+        <input onChange={e=>setPe({...pe, name: e.target.value})} />
+        {console.error("AAAA", pe)}
+
+        {/* array state */}
+        <input onChange={e => setAr([...ar,e.target.value])} />
+        {console.error("BBB", ar)}
+
         <h1>
           {values.email} {values.password} {todos[0].text}
           {console.log(todos[0].text)}
@@ -67,31 +80,35 @@ function App() {
         <button onClick={() => setShowHello(!showHello)}>toggle</button>
         {showHello && <Hello />}
 
-        <h3> - useReducer: </h3>
         <AddTodo/>
-        <h3> - useMemo: </h3>
+
         <Word />
-        <h3> - useState: </h3>
+
         <IntroName />
-        <h3> - useEffect: </h3>
-        <SaveName />
-        <h3> - custom hooks: </h3>
+
+        <Router>
+          <Route path="/" exact component={IntroName} />
+          <Route path="/effect" exact component={SaveName}/>
+          <Link to="/"></Link>
+          <Link to="/effect">effect</Link>
+
+        </Router>
+
         <FormUseCustomHook />
-        <h3> - useRef: </h3>
+
         <FormUseRef />
 
-        <h3> - useContext </h3>
         <UserProvider>
           <TestUseContext />
         </UserProvider>
-        <h3>useEffectlayout</h3>
+
         <Shape />
 
-        <h3>useCallBack</h3>
         <WordCallBack />
 
-        <h3>useImperativeHandle</h3>
         <ImperativeHandle />
+        <h3>abcde</h3>
+        <WorkCallBack2 />
 
       </>
     </div>

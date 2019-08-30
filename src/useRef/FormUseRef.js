@@ -9,8 +9,9 @@ export function FormUseRef() {
 
   return (
     <>
-      <p>chào bạn, {name}</p>
+      <h3> - useRef: </h3>
 
+      <p>chào bạn, {name}</p>
       <form onSubmit={e => e.preventDefault()}>
         <input
           placeholder="please enter your name"

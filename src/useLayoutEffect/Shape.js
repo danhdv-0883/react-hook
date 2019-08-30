@@ -2,22 +2,34 @@ import React, {useEffect, useRef, useLayoutEffect, useState} from 'react';
 
 export function Shape () {
   const [percent, setPercent] = useState(20)
-  const [width, setWidth] = useState();
-
-  useEffect(()=>{
+  const [height, setHeight] = useState(null);
 
 
-  }, percent)
+  const shapeRef = useRef(null)
 
-  const hangeChange = () => {
-    setWidth(e.target.value);
+  useEffect(() => {
+    setHeight(shapeRef.current.offsetHeight)
+    console.log(percent)
+  }, [percent]);
+
+
+  const style = {
+    width: `100px`,
+    height: `${percent}%`,
+    background: "red",
+    borderRadius: 'circle',
   }
 
   return (
-    <div style={{ background: "gray", width: width*10}}>
-      width: {width}
+    <div style={{height: "100vh"}}>
+      <h3>useEffectlayout</h3>
 
-      <input type="range" onChange={hangeChange}/>
+      <div
+        ref={shapeRef}
+        style={style}>
+        {height}
+      </div>
+      <input type="range" onChange={(e)=> setPercent(e.target.value)}/>
     </div>
   )
 }

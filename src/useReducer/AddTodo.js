@@ -1,15 +1,17 @@
 import React, { useReducer, useState } from 'react';
 
 const initState = {
-  notes: []
+  notes: [],
+  click: 0,
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case 'add':
+      console.table(state)
       return {
-        notes: [
-          ...state.notes, { text: action.text }
+        ...state, notes: [
+          ...state.notes, {text: action.text}
         ]
       }
     case 'removeAll':
@@ -27,6 +29,8 @@ export const AddTodo = () => {
 
   return(
     <div>
+      <h3> - useReducer: </h3>
+
       <ul>
         {state.notes.map((note, index) => <li key={index}>{note.text}</li>)}
       </ul>
