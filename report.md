@@ -138,7 +138,6 @@ export function Test() {
 }
 
 ```
-ví dụ này tương đương với
 
 ``` javascript
 import React from 'react';
@@ -171,6 +170,15 @@ export default class Test extends React.Component{
 
 
 ## 2> Phân tích ví dụ:
+- useEffect được khai báo trong component
+- Cách khai báo
+``` javascript
+useEffect(() => {
+   ......
+  });
+```
+- Tuy cách khai báo khác nhau, hoạt động khác nhau nhưng ví dụ phía trên tương đương với  2 lifecycle `componentDidMount`, `componentDidUpdate`
+
 
 ## 3> Cách thức hoạt động:
  - useEffect: khi component cần cập nhật lại sau khi render, nó sẽ gọi useEffect
