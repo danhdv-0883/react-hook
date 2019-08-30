@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+a {
+  display: inline-block;
+  border: solid 1px gray;
+  padding: 2px 5px;
+  text-decoration: none;
+  color: black;
+}
+
+
+.active-link {
+  color: goldenrod;
+}

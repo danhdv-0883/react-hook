@@ -16,7 +16,7 @@ import { Shape } from './useLayoutEffect/Shape';
 import { WordCallBack } from './useCallback/WordCallBack';
 import { ImperativeHandle } from './useImperativeHandle/ImperativeHandle';
 import { WorkCallBack2 } from './useCallback/WorkCallBack2';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 
 
 function App() {
@@ -80,33 +80,35 @@ function App() {
         <button onClick={() => setShowHello(!showHello)}>toggle</button>
         {showHello && <Hello />}
 
-        <AddTodo/>
-
-        <Word />
-
-        <IntroName />
 
         <Router>
-          <Route path="/" exact component={IntroName} />
-          <Route path="/effect" exact component={SaveName}/>
-          <Link to="/"></Link>
-          <Link to="/effect">effect</Link>
+          <NavLink activeClassName="active-link" to="/state">state</NavLink>
+          <NavLink activeClassName="active-link" to="/effect">effect</NavLink>
+          <NavLink activeClassName="active-link" to="/context">context</NavLink>
+          <NavLink activeClassName="active-link" to="/custom">custom</NavLink>
+          <NavLink activeClassName="active-link" to="/ref">ref</NavLink>
+          <NavLink activeClassName="active-link" to="/layouteffect">layouteffect</NavLink>
+          <NavLink activeClassName="active-link" to="/callback">callback</NavLink>
+          <NavLink activeClassName="active-link" to="/memo">memo</NavLink>
+          <NavLink activeClassName="active-link" to="/reducer">reducer</NavLink>
+          <NavLink activeClassName="active-link" to="/impe">impe</NavLink>
+
+          <Route path="/state" component={IntroName} />
+          <Route path="/effect" component={SaveName} />
+          <UserProvider>
+            <Route path="/context" component={TestUseContext} />
+          </UserProvider>
+          <Route path="/custom" component={FormUseCustomHook} />
+          <Route path="/ref" component={FormUseRef} />
+          <Route path="/layouteffect" component={Shape} />
+          <Route path="/callback" component={WordCallBack} />
+          <Route path="/memo" component={Word} />
+          <Route path="/reducer" component={AddTodo} />
+          <Route path="/impe" component={ImperativeHandle} />
 
         </Router>
 
-        <FormUseCustomHook />
 
-        <FormUseRef />
-
-        <UserProvider>
-          <TestUseContext />
-        </UserProvider>
-
-        <Shape />
-
-        <WordCallBack />
-
-        <ImperativeHandle />
         <h3>abcde</h3>
         <WorkCallBack2 />
 

@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 
 export const WordCallBack = () => {
-  const [text, setText] = useState('Hello!');
+  const [text, setText] = useState('A!');
 
   const ChildComponent = ({ text }) => {
     console.log('rendered again!');
     return (
       <div>
-        {text}
+        {text.toUpperCase()}
       </div>
     );
   }
@@ -17,8 +17,8 @@ export const WordCallBack = () => {
   return (
     <div>
       <h3>useCallBack</h3>
-      <button onClick={() => setText('Hello!')}>Hello! </button>
-      <button onClick={() => setText('Hola!')}>Hola!</button>
+      <button onClick={() => setText('A!')}>A! </button>
+      <button onClick={() => setText('B!')}>B!</button>
       {MemoizedComponent()}
     </div>
   )
