@@ -319,7 +319,10 @@ Các phần trước đó ta đã trình bày sơ qua, nhưng phần này trình
 # V> Các api khác:
 ## 1> useMemo:
 ### a. Why?
- Tương tự như các cách để tránh re-render lại khi không cần thiết(shouldComponentUpdate, memo, pureComponent), react hook có hỗ trợ useMemo để làm việc
+ Tương tự như các cách để tránh re-render lại khi không cần thiết(shouldComponentUpdate, memo, pureComponent), react hook có hỗ trợ useMemo để làm việc.
+(
+   dùng để memorize tất cả mọi thứ (string, array, function, vv), trả về 1 gía trị cụ thể (string, array, function, vv), thường đề truyền xuống các child component (pure) để nó không render lại khi không cần thiết và lưu các kết quả mà yêu cầu tính toán phức tạp mới ra được kết quả.
+)
 Dùng trong các trường hợp:
 - Referential equality (so sánh)
 Ví dụ trong trường hợp này:
@@ -343,7 +346,38 @@ function Blub() {
 }
 ```
 
-- Computationally expensive calculations (tính toán giá trị phức tạp)
+- Computationally expensive calculations (tính toán giá trị phức tạp):
+Ví dụ với những tính toán phức tạp, nó chỉ nên tính toán lại khi cần thiết(value thay đổi)
+
+``` javascript
+function calculate(iterations,multiplier) {
+  var result = 0;
+  for(var i=0;i<iterations;i++>){
+    result += iterator*multiplier;
+  }
+  return result;
+}
+
+function RenderIfNeed({iterations, multiplier}) {
+  //render if props change
+  const number =  React.useMemo(() => calculate(iterations, multiplier), [
+    iterations,
+    multiplier,
+  ])
+  return <div>Primes! {number}</div>
+}
+
+function NumberLarge(){
+  ...
+  return(
+    <div>
+    ....
+    <RenderIfNeed iterations={a} multiplier={b}/>
+    </div>
+  )
+}
+```
+
 
 ### b. Cú pháp
 ``` javascript
@@ -365,9 +399,29 @@ const memoizedCallback = useCallback(
 
 - Thay vì return 1 value như useMemo, useCallBack return 1 fucntion
 - Được dùng để chống sự re-render lại khi không cần thiêt của các thành phần con khi các sự phụ phụ thuộc có liên quan thay đổi (ví dự giống như `shouldComponentUpdate`)
+(
+   dùng để memorize handler, trả về 1 function, thường đề truyền xuống các child component (pure) để nó không render lại khi không cần thiết
+)
 - useCallback(fn, deps) sẽ tương đương với useMemo(() => fn, deps).
 _**Ví dụ:**_
 
+```javascript
+const CountButton = React.memo(function CountButton({onClick, count}) {
+  return <button onClick={onClick}>{count}</button>
+})
+function DualCounter() {
+  const [count1, setCount1] = React.useState(0)
+  const increment1 = React.useCallback(() => setCount1(c => c + 1), [])
+  const [count2, setCount2] = React.useState(0)
+  const increment2 = React.useCallback(() => setCount2(c => c + 1), [])
+  return (
+    <>
+      <CountButton count={count1} onClick={increment1} />
+      <CountButton count={count2} onClick={increment2} />
+    </>
+  )
+}
+```
 
 ## 3> useRef:
 - Ta có thể tạo ref cho component thay vì dùng createRef():
@@ -458,7 +512,23 @@ export const AddTodo = () => {
 - gần giống useEffect, khác it fires synchronously after all DOM mutation(được gọi đồng bộ sau khi DOM đã được update.)
 Nên nó được dùng để đọc tính toán layout, style sau khi dom đã thay đổi, nhưng trước khi phase painted vẽ layout mới
 
+( useEffect sẽ chạy khi render commit : sau khi browser vẽ xong thì nó mới chạy cái này. useLayoutEffect sẽ chạy đồng bộ sau khi tất cả dom cập nhật --> nó cập nhật trước khi browrer vẽ ra)
+- flow
+[](https://raw.githubusercontent.com/donavon/hook-flow/master/hook-flow.png)
+https://github.com/donavon/hook-flow)
+
 - chú ý: không sử dụng nó nếu ta server render, chỉ dùng với trường hợp client render
+
+-
+1. useEffect không chặn người dùng thao tác (non block), nên chỉnh sửa DOM sẽ k nên làm ở đây, ở đây kiểu như làm những gì chạy ngầm k thao tác trực tiếp đến DOM
+2. useLayoutEffect chặn người dùng thao tác (hiểu nôm na là nó block), thằng này chính xác là componentDidMount, componentDidUpdate ở các phiên bản Trước
+render => Update DOM => useLayoutEffect cập nhật vài chi tiết trên DOM => browser vẽ ra cho người dùng thấy
+
+Cụ thể hơn 1 tí là useLayoutEffect sẽ xem DOM lần cuối, nếu có sửa hay thêm gì thì làm ở đây, trước khi vẽ.
+
+`useLayoutEffect ` chỉ tốt về mặt thao tác với DOM thôi. các việc khác, thông thường như là API, attach ref các kiểu thì nên thao tác nên sử dụng `useEffect ` (Đây là lời khuyên đến từ react team).
+
+- Nếu animation cần thêm, sửa, xoá element của DOM : `useLayoutEffect`
 
 ## 6> useContext:
 - Đơn giản hóa việc dùng context hơn so với trước đây
