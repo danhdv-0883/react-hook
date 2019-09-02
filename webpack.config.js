@@ -1,6 +1,6 @@
 const path = require('path') // lấy đường dẫn tuyệt đối của thư mục
 console.log("path of @@: ");
-const HtmlWebpackPlugin = require('html-webpack-plugin'); 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack'); //to access built-in plugins
 
 
@@ -20,8 +20,8 @@ const config = {
         // babel-preset-env đảm nhận phần gọi biến đổi es6 -> es5
         // babel-preset-react đản nhận phần biến đổi jsx -> js (Vì mình làm việc vs react nên cần mấy cái chuyển đổi này nhé ^^)
       {
-        use: 
-            {   
+        use:
+            {
                 loader:'babel-loader',
                 //có thể truyền vào từ config webpack/ babel.config.js
                 // options: {
@@ -30,7 +30,7 @@ const config = {
         },
         exclude: /node_modules/, //loại trừ
         test: /\.js$/,           //loader loại file này
-        
+
       },
       //load file hình ảnh/font/...
       {
@@ -42,7 +42,7 @@ const config = {
           },
         ],
       },
-      
+
       //style loader
         //Mấy cái loader này sẽ được thực hiện theo thứ tự
         // sass-loader transforms Sass thành CSS.
@@ -66,14 +66,14 @@ const config = {
     new webpack.ProgressPlugin(),
     //inject bundel vào index.html, dùng bản 3.0.7 fix lỗi undentified nếu xảy ra(linux,node 10)
     new HtmlWebpackPlugin({template: __dirname+'/public/index.html',inject: true,filename:"index.html",hash: true}),
-    
+
     //reload lại phần nào thay đổi trong html
     new webpack.HotModuleReplacementPlugin(),
     //nếu lỗi, ko tải lại trang mà chỉ console log
     new webpack.NoEmitOnErrorsPlugin(),
-    
+
   ],
-  
+
   //fix for c9.io : check host:Invalid Host header
   devServer: {
     compress: true,
@@ -84,7 +84,11 @@ const config = {
     hot: true,
     inline: true,
     publicPath: '/',
- }  
+
+    //fix: react router : refresh not found
+    //https://tylermcginnis.com/react-router-cannot-get-url-refresh/
+    historyApiFallback: true,
+ }
 }
 
 module.exports = config;
