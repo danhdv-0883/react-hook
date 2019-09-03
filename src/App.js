@@ -13,6 +13,7 @@ import { FormUseRef } from './useRef/FormUseRef';
 import { TestUseContext } from './useContext/TestUseContext';
 import { UserProvider } from './useContext/UserContext';
 import { Shape } from './useLayoutEffect/Shape';
+import { Shape2 } from './useLayoutEffect/Shape2';
 import { WordCallBack } from './useCallback/WordCallBack';
 import { ImperativeHandle } from './useImperativeHandle/ImperativeHandle';
 import { WorkCallBack2 } from './useCallback/WorkCallBack2';
@@ -80,7 +81,6 @@ function App() {
         <button onClick={() => setShowHello(!showHello)}>toggle</button>
         {showHello && <Hello />}
 
-
         <Router>
           <NavLink activeClassName="active-link" to="/state">state</NavLink>
           <NavLink activeClassName="active-link" to="/effect">effect</NavLink>
@@ -100,18 +100,13 @@ function App() {
           </UserProvider>
           <Route path="/custom" component={FormUseCustomHook} />
           <Route path="/ref" component={FormUseRef} />
-          <Route path="/layouteffect" component={Shape} />
+          <Route path="/layouteffect" component={Shape2} />
           <Route path="/callback" component={WordCallBack} />
           <Route path="/memo" component={Word} />
           <Route path="/reducer" component={AddTodo} />
           <Route path="/impe" component={ImperativeHandle} />
 
         </Router>
-
-
-        <h3>abcde</h3>
-        <WorkCallBack2 />
-
       </>
     </div>
   );

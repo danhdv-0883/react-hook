@@ -1,4 +1,4 @@
-# I> Khái niệm cản bản về reactjs 
+# I> Khái niệm cản bản về reactjs
 React hook đã được lên bản chính thức kể từ phiên bản 16.8. Trước đó, vào React Conf 2018 ở Cali đội ngũ phát triển đã giới thiệu nó và bắt đầu bản beta cho các phiên bản kế và nay đã là bản chính thức. Nếu ta vào https://reactjs.org/docs/hooks-intro.html bản đã thấy nó từ beta sang new
 
 
@@ -7,7 +7,7 @@ Hook cho phép ta không cần thiết phải tạo class component, chỉ cần
 ## 1. Lợi ích từ hook:
 ### a. Giảm số lượng code đáng kể
 Có thể giảm số lượng đáng kể, theo thống kê khoảng 90% với 1 project trung bình do:
-- Nhờ việc quản lý state dễ dàng và hiệu quả hơn với hook, ta có thể tránh lỗi wrapper hell 
+- Nhờ việc quản lý state dễ dàng và hiệu quả hơn với hook, ta có thể tránh lỗi wrapper hell
 ![alt text](https://miro.medium.com/proxy/1*SU5_ws88Kh_Oio_L4Myhvg.png "image")
 - Đồng nghiệp không thấy chán nản khi reivew code
 
@@ -66,7 +66,7 @@ class Example extends React.Component {
   }
 }
 ```
-### 2.phân tích ví dụ: 
+### 2.phân tích ví dụ:
 Ở ví dụ này:
  `[count, setCount] = useState(0); `
 - useState là 1 function nhận 0 là giá trị sẽ setState cho biến count trong lần render đầu tiên
@@ -87,12 +87,12 @@ _**Chú ý:**_
   const [age, setAge] = useState(42);
   const [fruit, setFruit] = useState("banana");
   const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
-  
+
 ```
 
 - function của nó là useState mà không phải createState, vì state lun cập nhật lên tục, dùng từ create chỉ ý nghĩa tạo trong lần đầu tiên rùi thui
 
-## 3> Chú ý: 
+## 3> Chú ý:
 - Điểm khác biệt so với setState là nó không thể tự động auto merged cập nhật object/array.
 
 Có thẻ dùng spread operator để giải quyết:
@@ -155,7 +155,7 @@ export default class Test extends React.Component{
   }
 
   render() {
-   
+
     return (
       <div>
         <div>count: {count}</div>
@@ -185,7 +185,7 @@ useEffect(() => {
  - useEffect nằm trong component để mà khi có props pass hay state trong trong component update thì sẽ gọi nó và có thể truy cập các biến ấy
 
  - useEffect sẽ chạy khi mà mỗi khi render: đó là mặc định. Ta có thể customize lại:
-Lấy ví dụ ở trên ta có:  
+Lấy ví dụ ở trên ta có:
 ``` javascript
 useEffect(() => {
     document.title = `You clicked ${count} times`;
@@ -207,16 +207,16 @@ Ta chỉ thực hiện viện thay đổi title của trang và set vào localSt
 
 Xem thêm : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
 
-+ 
++
 ``` javascript
 useEffect(() => {
-    
+
   }, []);
 
 ```
 trường hợp này chỉ dùng khi effect nầy không sử dụng bất kỳ biến nào trong component scope, nó sẽ dùng init props/state nếu có (nếu muốn effect này chỉ chạy 1 lần và clean đi(mount và unmount)) --> không cần phải re-render lại
 
-- trường hợp nhiều effect: 
+- trường hợp nhiều effect:
 ``` javascript
 function Form() {
   // 1. Use the name state variable
@@ -239,7 +239,7 @@ function Form() {
 }
 
 ```
-Thứ tự gọi sẽ là 
+Thứ tự gọi sẽ là
 ``` javascript
 // ------------
 // First render
@@ -288,7 +288,7 @@ useEffect(() => {
 ## 4> Tóm lại:
 - constructor: không cần thiết. Nếu cần thiết khai báo state, có thể dùng useState, còn nếu muốn tính toán và set cho state, ta có thể sử dụng function trong useState
 
-- shouldComponentUpdate: có thể dùng React.memo thay thế (nhưng nó chỉ shallowly so sánh props) 
+- shouldComponentUpdate: có thể dùng React.memo thay thế (nhưng nó chỉ shallowly so sánh props)
 
 - render: nằm trong return
 - componentDidMount, componentDidUpdate, componentWillUnmount:== useEffect
@@ -318,17 +318,75 @@ Các phần trước đó ta đã trình bày sơ qua, nhưng phần này trình
 ---
 # V> Các api khác:
 ## 1> useMemo:
-Tương tự như các cách để tránh re-render lại khi không cần thiết(shouldComponentUpdate, memo, pureComponent), react hook có hỗ trợ useMemo để làm việc nà
+### a. Why?
+ Tương tự như các cách để tránh re-render lại khi không cần thiết(shouldComponentUpdate, memo, pureComponent), react hook có hỗ trợ useMemo để làm việc.
+(
+   dùng để memorize tất cả mọi thứ (string, array, function, vv), trả về 1 gía trị cụ thể (string, array, function, vv), thường đề truyền xuống các child component (pure) để nó không render lại khi không cần thiết và lưu các kết quả mà yêu cầu tính toán phức tạp mới ra được kết quả.
+)
+Dùng trong các trường hợp:
+- Referential equality (so sánh)
+Ví dụ trong trường hợp này:
+``` javascript
+function Foo({bar, baz}) {
+  React.useEffect(() => {
+    const options = {bar, baz}
+    buzz(options)
+  }, [bar, baz])
+  return <div>foobar</div>
+}
+```
+Trường hợp biến bar, baz là 1 object/array --> useEffect vẫn bị gọi vẫn bị render lại. Do đó ta cần dùng useMemo / useCallback
+(chú ý: useEffect truyền vào tham số thứ 2 không được là [options] , mỗi lần truyền props vào options đều change do cơ chế trong javascript)
 
-- Cú pháp
+```javascript
+function Blub() {
+  const bar = React.useCallback(() => {}, [])
+  const baz = React.useMemo(() => [1, 2, 3], [])
+  return <Foo bar={bar} baz={baz} />
+}
+```
+
+- Computationally expensive calculations (tính toán giá trị phức tạp):
+Ví dụ với những tính toán phức tạp, nó chỉ nên tính toán lại khi cần thiết(value thay đổi)
+
+``` javascript
+function calculate(iterations,multiplier) {
+  var result = 0;
+  for(var i=0;i<iterations;i++>){
+    result += iterator*multiplier;
+  }
+  return result;
+}
+
+function RenderIfNeed({iterations, multiplier}) {
+  //render if props change
+  const number =  React.useMemo(() => calculate(iterations, multiplier), [
+    iterations,
+    multiplier,
+  ])
+  return <div>Primes! {number}</div>
+}
+
+function NumberLarge(){
+  ...
+  return(
+    <div>
+    ....
+    <RenderIfNeed iterations={a} multiplier={b}/>
+    </div>
+  )
+}
+```
+
+
+### b. Cú pháp
 ``` javascript
 const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
 ```
-- Return về 1 memoized value giá trị cụ thể( khác với useCallBack return về 1 function) / function có return value
+- Return về 1 memoized value giá trị cụ thể( khác với useCallBack return về 1 function), nó có thể return về bất kỳ giá trị nào(kể cả function) và lưu trữ giá trị đó
 -  Nếu ta không có array nào truyền vào, thì nó sẽ tự tính toán lại mỗi khi render
 
-
-## 2> useCallBack 
+## 2> useCallBack
 ``` javascript
 const memoizedCallback = useCallback(
   () => {
@@ -341,9 +399,29 @@ const memoizedCallback = useCallback(
 
 - Thay vì return 1 value như useMemo, useCallBack return 1 fucntion
 - Được dùng để chống sự re-render lại khi không cần thiêt của các thành phần con khi các sự phụ phụ thuộc có liên quan thay đổi (ví dự giống như `shouldComponentUpdate`)
+(
+   dùng để memorize handler, trả về 1 function, thường đề truyền xuống các child component (pure) để nó không render lại khi không cần thiết
+)
 - useCallback(fn, deps) sẽ tương đương với useMemo(() => fn, deps).
 _**Ví dụ:**_
 
+```javascript
+const CountButton = React.memo(function CountButton({onClick, count}) {
+  return <button onClick={onClick}>{count}</button>
+})
+function DualCounter() {
+  const [count1, setCount1] = React.useState(0)
+  const increment1 = React.useCallback(() => setCount1(c => c + 1), [])
+  const [count2, setCount2] = React.useState(0)
+  const increment2 = React.useCallback(() => setCount2(c => c + 1), [])
+  return (
+    <>
+      <CountButton count={count1} onClick={increment1} />
+      <CountButton count={count2} onClick={increment2} />
+    </>
+  )
+}
+```
 
 ## 3> useRef:
 - Ta có thể tạo ref cho component thay vì dùng createRef():
@@ -404,7 +482,7 @@ function reducer(state, action) {
 ``` javascript
  const [state, dispatch] = useReducer(reducer, initState)
 ```
- Nó nhận vào 2 tham số: reducer để xử lý, initState là state ban đầu. Tương ứng như các hook khác, ở đây trả về state, và dispatch 
+ Nó nhận vào 2 tham số: reducer để xử lý, initState là state ban đầu. Tương ứng như các hook khác, ở đây trả về state, và dispatch
 - Cách dispach cũng rất đơn giản, ta dispatch type và value. Việc sử lý sẽ do reducer dựa vào type và value vừa mới dispatch này
 
 
@@ -434,7 +512,23 @@ export const AddTodo = () => {
 - gần giống useEffect, khác it fires synchronously after all DOM mutation(được gọi đồng bộ sau khi DOM đã được update.)
 Nên nó được dùng để đọc tính toán layout, style sau khi dom đã thay đổi, nhưng trước khi phase painted vẽ layout mới
 
+( useEffect sẽ chạy khi render commit : sau khi browser vẽ xong thì nó mới chạy cái này. useLayoutEffect sẽ chạy đồng bộ sau khi tất cả dom cập nhật --> nó cập nhật trước khi browrer vẽ ra)
+- flow
+[](https://raw.githubusercontent.com/donavon/hook-flow/master/hook-flow.png)
+https://github.com/donavon/hook-flow)
+
 - chú ý: không sử dụng nó nếu ta server render, chỉ dùng với trường hợp client render
+
+-
+1. useEffect không chặn người dùng thao tác (non block), nên chỉnh sửa DOM sẽ k nên làm ở đây, ở đây kiểu như làm những gì chạy ngầm k thao tác trực tiếp đến DOM
+2. useLayoutEffect chặn người dùng thao tác (hiểu nôm na là nó block), thằng này chính xác là componentDidMount, componentDidUpdate ở các phiên bản Trước
+render => Update DOM => useLayoutEffect cập nhật vài chi tiết trên DOM => browser vẽ ra cho người dùng thấy
+
+Cụ thể hơn 1 tí là useLayoutEffect sẽ xem DOM lần cuối, nếu có sửa hay thêm gì thì làm ở đây, trước khi vẽ.
+
+`useLayoutEffect ` chỉ tốt về mặt thao tác với DOM thôi. các việc khác, thông thường như là API, attach ref các kiểu thì nên thao tác nên sử dụng `useEffect ` (Đây là lời khuyên đến từ react team).
+
+- Nếu animation cần thêm, sửa, xoá element của DOM : `useLayoutEffect`
 
 ## 6> useContext:
 - Đơn giản hóa việc dùng context hơn so với trước đây
@@ -541,11 +635,11 @@ export function ImperativeHandle () {
 - Cách dùng rất đơn giản:
 ```javascript
 useDebugValue(label)
-``` 
+```
 
 - Chú ý: Không được khuyến khích dùng, chỉ dùng 1 phần cho các shared library
 
-# VI> Custom your hook: 
+# VI> Custom your hook:
 - Giúp xử lý các vấn đề trùng lặp về logic, ta sẽ tách thành 1 component riêng và tái sử dụng. Thay vì trước đây phải dùng HOCs, điều đó khiến ta phải chuyển những gì trùng lặp vào HOCs
 
 
@@ -568,7 +662,7 @@ export const useForm = initialValues => {
 }
 ```
 => Sau đó sử dụng:
-``` javascript 
+``` javascript
 import React from "react";
 import { useForm } from "./useForm";
 
@@ -602,7 +696,7 @@ const App = () => {
 
 Nguồn xem thêm: https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook
 
---- 
+---
 
 
 
