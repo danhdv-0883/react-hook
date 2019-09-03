@@ -18,6 +18,7 @@ import { WordCallBack } from './useCallback/WordCallBack';
 import { ImperativeHandle } from './useImperativeHandle/ImperativeHandle';
 import { WorkCallBack2 } from './useCallback/WorkCallBack2';
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+import { TestState } from './useState/TestState';
 
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
         {/* <Hello /> */}
         <button onClick={() => setShowHello(!showHello)}>toggle</button>
         {showHello && <Hello />}
+        <TestState/>
 
         <Router>
           <NavLink activeClassName="active-link" to="/state">state</NavLink>

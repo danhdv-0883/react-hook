@@ -1,4 +1,4 @@
-# I> Khái niệm cản bản về reactjs
+# I> Khái niệm cản bản về React Hook
 React hook đã được lên bản chính thức kể từ phiên bản 16.8. Trước đó, vào React Conf 2018 ở Cali đội ngũ phát triển đã giới thiệu nó và bắt đầu bản beta cho các phiên bản kế và nay đã là bản chính thức. Nếu ta vào https://reactjs.org/docs/hooks-intro.html bản đã thấy nó từ beta sang new
 
 
@@ -181,6 +181,7 @@ useEffect(() => {
 
 
 ## 3> Cách thức hoạt động:
+### a. Cơ bản:
  - useEffect: khi component cần cập nhật lại sau khi render, nó sẽ gọi useEffect
  - useEffect nằm trong component để mà khi có props pass hay state trong trong component update thì sẽ gọi nó và có thể truy cập các biến ấy
 
@@ -192,6 +193,7 @@ useEffect(() => {
     localStorage.setItem("count", JSON.stringify(count));
   }, [count]);
 ```
+### b. Tối ưu chỉ gọi lại khi cần thiết:
 + Ví dụ trên, ta pass [count] như là tham số thứ 2 trong useEffect. Ở lần cập nhật , nó sẽ so sánh giá trị kế với giá trị trươc đó: nếu là giá trị biến count giống như giá trị biến count trước đó nó sẽ không render lại.
 + Việc này giống như trong lifecycle `componentDidUpdate` :
 ``` javascript
@@ -206,6 +208,8 @@ componentDidUpdate(prevStates, prevProps) {
 Ta chỉ thực hiện viện thay đổi title của trang và set vào localStorage khi biến count thay đổi giá trị.
 
 Xem thêm : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
+_**Chú ý**_: Trường hợp nó là 1 array/object thì vẫn bị render lại
+
 
 +
 ``` javascript
@@ -216,7 +220,7 @@ useEffect(() => {
 ```
 trường hợp này chỉ dùng khi effect nầy không sử dụng bất kỳ biến nào trong component scope, nó sẽ dùng init props/state nếu có (nếu muốn effect này chỉ chạy 1 lần và clean đi(mount và unmount)) --> không cần phải re-render lại
 
-- trường hợp nhiều effect:
+### c.trường hợp nhiều effect:
 ``` javascript
 function Form() {
   // 1. Use the name state variable
@@ -260,7 +264,7 @@ useEffect(updateTitle)     // 4. Replace the effect for updating the title
 // ...
 ```
 
-- [Cleaning up an effect](https://reactjs.org/docs/hooks-reference.html#cleaning-up-an-effect) :
+### d. [Cleaning up an effect](https://reactjs.org/docs/hooks-reference.html#cleaning-up-an-effect) :
 Những effect mà có return nhằm để dọn dẹp những tác vụ không cần thiết khi unmount hoặc dọn dẹp các event không dùng nữa. Tham số thứ 2 của useEffect là [] : chạy 1 lần duy nhất
 
 ``` javascript
@@ -323,28 +327,38 @@ Các phần trước đó ta đã trình bày sơ qua, nhưng phần này trình
 (
    dùng để memorize tất cả mọi thứ (string, array, function, vv), trả về 1 gía trị cụ thể (string, array, function, vv), thường đề truyền xuống các child component (pure) để nó không render lại khi không cần thiết và lưu các kết quả mà yêu cầu tính toán phức tạp mới ra được kết quả.
 )
-Dùng trong các trường hợp:
+### b. Cú pháp
+``` javascript
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+```
+### c.Dùng trong các trường hợp:
 - Referential equality (so sánh)
 Ví dụ trong trường hợp này:
 ``` javascript
-function Foo({bar, baz}) {
-  React.useEffect(() => {
-    const options = {bar, baz}
-    buzz(options)
-  }, [bar, baz])
-  return <div>foobar</div>
-}
-```
-Trường hợp biến bar, baz là 1 object/array --> useEffect vẫn bị gọi vẫn bị render lại. Do đó ta cần dùng useMemo / useCallback
-(chú ý: useEffect truyền vào tham số thứ 2 không được là [options] , mỗi lần truyền props vào options đều change do cơ chế trong javascript)
+export const Word2 = () => {
+  const [text, setText] = useState('A!');
 
-```javascript
-function Blub() {
-  const bar = React.useCallback(() => {}, [])
-  const baz = React.useMemo(() => [1, 2, 3], [])
-  return <Foo bar={bar} baz={baz} />
-}
-```
+  const ChildComponent = ({ text }) => {
+    console.log('rendered again!');
+    return (
+      <div>
+        {text.toUpperCase()}
+      </div>
+    );
+  }
+
+  const MemoizedComponent = useMemo(() => <ChildComponent text={text} />, [text]);
+
+  return (
+    <div>
+      <h3>useMemo</h3>
+      <button onClick={() => setText("A")}>A! </button>
+      <button onClick={() => setText('B!')}>B!</button>
+      {MemoizedComponent}
+    </div>
+  )
+  ```
+  Nếu click lại cùng 1 button, nó sẽ so sánh state trước đó giống với state hiện tại--> ko render lại
 
 - Computationally expensive calculations (tính toán giá trị phức tạp):
 Ví dụ với những tính toán phức tạp, nó chỉ nên tính toán lại khi cần thiết(value thay đổi)
@@ -377,14 +391,8 @@ function NumberLarge(){
   )
 }
 ```
-
-
-### b. Cú pháp
-``` javascript
-const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
-```
-- Return về 1 memoized value giá trị cụ thể( khác với useCallBack return về 1 function), nó có thể return về bất kỳ giá trị nào(kể cả function) và lưu trữ giá trị đó
--  Nếu ta không có array nào truyền vào, thì nó sẽ tự tính toán lại mỗi khi render
+### d. Chú ý:
+- Không nên lạm dụng việc dùng useMemo hay useCallBack, vì nó cũng sẽ tốn 1 khoảng chi phí tính toán để xác định có nên thực hiện lại việc render hay lưu giá trị tính toán cũ. React cũng đủ nhanh trong hầu hết tất cả trường hợp đủ thực hiện mà không cần phải dùng đến chúng
 
 ## 2> useCallBack
 ``` javascript
@@ -514,7 +522,7 @@ Nên nó được dùng để đọc tính toán layout, style sau khi dom đã 
 
 ( useEffect sẽ chạy khi render commit : sau khi browser vẽ xong thì nó mới chạy cái này. useLayoutEffect sẽ chạy đồng bộ sau khi tất cả dom cập nhật --> nó cập nhật trước khi browrer vẽ ra)
 - flow
-[](https://raw.githubusercontent.com/donavon/hook-flow/master/hook-flow.png)
+![](https://raw.githubusercontent.com/donavon/hook-flow/master/hook-flow.png)
 https://github.com/donavon/hook-flow)
 
 - chú ý: không sử dụng nó nếu ta server render, chỉ dùng với trường hợp client render

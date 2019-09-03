@@ -7,7 +7,7 @@ export const Word2 = () => {
     console.log('rendered again!');
     return (
       <div>
-        {text.toUpperCase()}
+
       </div>
     );
   }
@@ -16,8 +16,8 @@ export const Word2 = () => {
 
   return (
     <div>
-      <h3>useCallBack</h3>
-      <button onClick={() => setText('A!')}>A! </button>
+      <h3>useMemo</h3>
+      <button onClick={() => setText({name: "age"})}>A! </button>
       <button onClick={() => setText('B!')}>B!</button>
       {MemoizedComponent}
     </div>
